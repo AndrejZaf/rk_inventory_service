@@ -1,0 +1,17 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rare_kickz
+    username: postgres
+    password: user
+  jpa:
+    generate-ddl: true
+  application:
+    name: rk-ecommerce-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
