@@ -33,9 +33,4 @@ public class SneakerImage {
     @ManyToOne
     @JoinColumn(name = "sneaker_id", nullable = false)
     private Sneaker sneaker;
-
-    public SneakerImage(final String imageData, final Sneaker sneaker) {
-        this.imageData = imageData;
-        this.sneaker = sneaker;
-    }
 }

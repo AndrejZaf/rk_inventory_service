@@ -1,7 +1,6 @@
 package com.rarekickz.rk_ecommerce_service.service.impl;
 
 import com.rarekickz.rk_ecommerce_service.domain.Sneaker;
-import com.rarekickz.rk_ecommerce_service.domain.SneakerSize;
 import com.rarekickz.rk_ecommerce_service.repository.SneakerRepository;
 import com.rarekickz.rk_ecommerce_service.service.SneakerService;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,8 +20,14 @@ public class SneakerServiceImpl implements SneakerService {
 
     @Override
     @Transactional
-    public Sneaker findFavorite() {
+    public Sneaker findPremiumSneaker() {
         return sneakerRepository.findBySpecialIsTrue().orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    @Transactional
+    public Sneaker findById(final Long sneakerId) {
+        return sneakerRepository.findByIdWithImages(sneakerId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -31,9 +36,10 @@ public class SneakerServiceImpl implements SneakerService {
     }
 
     @Override
+    @Transactional
     public List<Sneaker> findAllByPages(final int page, final int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        final Page<Sneaker> sneakers = sneakerRepository.findAll(pageRequest);
+        final Page<Sneaker> sneakers = sneakerRepository.findAllWithImages(pageRequest);
         return sneakers.toList();
     }
 }

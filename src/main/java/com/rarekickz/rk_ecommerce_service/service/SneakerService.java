@@ -1,13 +1,14 @@
 package com.rarekickz.rk_ecommerce_service.service;
 
 import com.rarekickz.rk_ecommerce_service.domain.Sneaker;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface SneakerService {
 
-    Sneaker findFavorite();
+    Sneaker findPremiumSneaker();
+
+    Sneaker findById(Long sneakerId);
 
     List<Sneaker> findAll();
 

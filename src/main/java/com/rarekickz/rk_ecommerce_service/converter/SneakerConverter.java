@@ -15,7 +15,7 @@ import java.util.Set;
 @UtilityClass
 public class SneakerConverter {
 
-    public static SneakerDTO convertFavoriteSneaker(final Sneaker sneaker) {
+    public static SneakerDTO convertPremiumSneaker(final Sneaker sneaker) {
         return SneakerDTO.builder()
                 .id(sneaker.getId())
                 .description(sneaker.getDescription())
