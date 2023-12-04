@@ -2,6 +2,7 @@ package com.rarekickz.rk_ecommerce_service.web;
 
 import com.rarekickz.rk_ecommerce_service.domain.Sneaker;
 import com.rarekickz.rk_ecommerce_service.dto.SneakerDTO;
+import com.rarekickz.rk_ecommerce_service.enums.Gender;
 import com.rarekickz.rk_ecommerce_service.service.SneakerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,9 +39,11 @@ public class SneakerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SneakerDTO>> getSneakers(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<SneakerDTO>> getSneakers(@RequestParam int page, @RequestParam int size,
+                                                        @RequestParam(required = false) List<Long> brandIds, @RequestParam(required = false) List<Double> sizes,
+                                                        @RequestParam(required = false) List<Gender> genders) {
         // TODO: Add sorting in the future as well
-        final List<Sneaker> sneakers = sneakerService.findAllByPages(page, size);
+        final List<Sneaker> sneakers = sneakerService.findAllByPages(page, size, brandIds, genders, sizes);
         return new ResponseEntity<>(convertToSneakerDTOList(sneakers), HttpStatus.OK);
     }
 }
