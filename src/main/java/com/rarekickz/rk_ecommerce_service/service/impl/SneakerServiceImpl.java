@@ -46,7 +46,7 @@ public class SneakerServiceImpl implements SneakerService {
     @Override
     @Transactional
     public List<Sneaker> findAllByPages(final int page, final int size, final List<Long> brandIds, final List<Gender> genders, final List<Double> sizes) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+        final PageRequest pageRequest = PageRequest.of(page, size);
         final Specification<Sneaker> sneakerSpecification = createSneakerSpecification(brandIds, genders, sizes);
         final Page<Sneaker> sneakers = sneakerRepository.findAll(sneakerSpecification, pageRequest);
         final List<Long> sneakerIds = sneakers.stream().map(Sneaker::getId)
