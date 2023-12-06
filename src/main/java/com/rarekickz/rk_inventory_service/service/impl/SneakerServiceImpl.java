@@ -53,6 +53,12 @@ public class SneakerServiceImpl implements SneakerService {
 
     @Override
     @Transactional
+    public List<Sneaker> findAllByIdWithImages(final List<Long> sneakerIds) {
+        return sneakerRepository.findAllByIdWithImages(sneakerIds);
+    }
+
+    @Override
+    @Transactional
     public List<Sneaker> findAllByPages(final int page, final int size, final List<Long> brandIds, final List<Gender> genders, final List<Double> sizes) {
         final PageRequest pageRequest = PageRequest.of(page, size);
         final Specification<Sneaker> sneakerSpecification = createSneakerSpecification(brandIds, genders, sizes);

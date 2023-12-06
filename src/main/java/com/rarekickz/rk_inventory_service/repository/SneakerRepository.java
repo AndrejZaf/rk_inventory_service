@@ -22,6 +22,11 @@ public interface SneakerRepository extends JpaRepository<Sneaker, Long>, JpaSpec
             "WHERE s.id = :sneakerId")
     Optional<Sneaker> findByIdWithImages(Long sneakerId);
 
+    @Query("SELECT s FROM sneaker s " +
+            "LEFT JOIN FETCH s.sneakerImages " +
+            "WHERE s.id IN :sneakerIds")
+    List<Sneaker> findAllByIdWithImages(List<Long> sneakerIds);
+
     Optional<Sneaker> findBySpecialTrue();
 
     @Query("SELECT s FROM sneaker s " +

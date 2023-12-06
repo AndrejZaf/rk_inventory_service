@@ -1,6 +1,7 @@
 package com.rarekickz.rk_inventory_service.web;
 
 import com.rarekickz.rk_inventory_service.domain.Sneaker;
+import com.rarekickz.rk_inventory_service.dto.SneakerCartDTO;
 import com.rarekickz.rk_inventory_service.dto.SneakerDTO;
 import com.rarekickz.rk_inventory_service.enums.Gender;
 import com.rarekickz.rk_inventory_service.service.SneakerService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.rarekickz.rk_inventory_service.converter.SneakerConverter.convertPremiumSneaker;
+import static com.rarekickz.rk_inventory_service.converter.SneakerConverter.convertToSneakerCartDTOs;
 import static com.rarekickz.rk_inventory_service.converter.SneakerConverter.convertToSneakerDTO;
 import static com.rarekickz.rk_inventory_service.converter.SneakerConverter.convertToSneakerDTOList;
 
@@ -41,6 +43,12 @@ public class SneakerController {
     public ResponseEntity<SneakerDTO> getPremiumSneaker(@PathVariable Long id) {
         final Sneaker sneaker = sneakerService.findById(id);
         return new ResponseEntity<>(convertToSneakerDTO(sneaker), HttpStatus.OK);
+    }
+
+    @GetMapping("/cart")
+    public ResponseEntity<List<SneakerCartDTO>> getSneakerForCart(@RequestParam List<Long> ids) {
+        final List<Sneaker> sneakers = sneakerService.findAllByIdWithImages(ids);
+        return new ResponseEntity<>(convertToSneakerCartDTOs(sneakers), HttpStatus.OK);
     }
 
     @GetMapping

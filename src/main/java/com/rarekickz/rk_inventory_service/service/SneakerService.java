@@ -23,4 +23,6 @@ public interface SneakerService {
     void premium(Long sneakerId);
 
     List<Sneaker> findAll();
+
+    List<Sneaker> findAllByIdWithImages(List<Long> sneakerIds);
 }

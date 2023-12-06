@@ -3,6 +3,7 @@ package com.rarekickz.rk_inventory_service.converter;
 import com.rarekickz.rk_inventory_service.domain.Sneaker;
 import com.rarekickz.rk_inventory_service.domain.SneakerImage;
 import com.rarekickz.rk_inventory_service.domain.SneakerSize;
+import com.rarekickz.rk_inventory_service.dto.SneakerCartDTO;
 import com.rarekickz.rk_inventory_service.dto.SneakerDTO;
 import com.rarekickz.rk_inventory_service.dto.SneakerSizeDTO;
 import lombok.experimental.UtilityClass;
@@ -36,6 +37,21 @@ public class SneakerConverter {
                 .images(convertToStringImages(sneaker.getSneakerImages()))
                 .sizes(convertToSneakerSizeDTO(sneaker.getSneakerSizes()))
                 .special(sneaker.isSpecial())
+                .build();
+    }
+
+    public static List<SneakerCartDTO> convertToSneakerCartDTOs(final List<Sneaker> sneakers) {
+        return sneakers.stream()
+                .map(SneakerConverter::convertToSneakerCartDTO)
+                .toList();
+    }
+
+    public static SneakerCartDTO convertToSneakerCartDTO(final Sneaker sneaker) {
+        return SneakerCartDTO.builder()
+                .id(sneaker.getId())
+                .price(sneaker.getPrice())
+                .name(sneaker.getName())
+                .images(convertToStringImages(sneaker.getSneakerImages()))
                 .build();
     }
 
