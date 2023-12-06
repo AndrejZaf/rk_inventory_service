@@ -9,7 +9,7 @@ spring:
   jpa:
     generate-ddl: true
   application:
-    name: rk-ecommerce-service
+    name: rk-inventory-service
 
 eureka:
   client:

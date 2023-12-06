@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.rarekickz</groupId>
-    <artifactId>rk_ecommerce_service</artifactId>
+    <artifactId>rk_inventory_service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rk_ecommerce_service</name>
-    <description>rk_ecommerce_service</description>
+    <name>rk_inventory_service</name>
+    <description>rk_inventory_service</description>
     <properties>
         <java.version>17</java.version>
     </properties>
