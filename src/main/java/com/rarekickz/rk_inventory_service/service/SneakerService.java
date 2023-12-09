@@ -1,9 +1,11 @@
 package com.rarekickz.rk_inventory_service.service;
 
 import com.rarekickz.rk_inventory_service.domain.Sneaker;
+import com.rarekickz.rk_inventory_service.dto.ReserveSneakerDTO;
 import com.rarekickz.rk_inventory_service.dto.SneakerDTO;
 import com.rarekickz.rk_inventory_service.enums.Gender;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface SneakerService {
@@ -25,4 +27,6 @@ public interface SneakerService {
     List<Sneaker> findAll();
 
     List<Sneaker> findAllByIdWithImages(List<Long> sneakerIds);
+
+    void reserve(Collection<ReserveSneakerDTO> reservedSneakers);
 }

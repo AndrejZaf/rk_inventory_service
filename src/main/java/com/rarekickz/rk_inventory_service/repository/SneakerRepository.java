@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,4 +33,9 @@ public interface SneakerRepository extends JpaRepository<Sneaker, Long>, JpaSpec
     @Query("SELECT s FROM sneaker s " +
             "LEFT JOIN FETCH s.sneakerImages")
     List<Sneaker> findAllSneakersWithImages();
+
+    @Query("SELECT s FROM sneaker s " +
+            "LEFT JOIN FETCH s.sneakerSizes " +
+            "WHERE s.id IN :ids")
+    List<Sneaker> findAllWithSizes(Collection<Long> ids);
 }

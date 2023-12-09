@@ -4,8 +4,11 @@ import com.rarekickz.rk_inventory_service.domain.Brand;
 import com.rarekickz.rk_inventory_service.domain.Sneaker;
 import com.rarekickz.rk_inventory_service.domain.SneakerImage;
 import com.rarekickz.rk_inventory_service.domain.SneakerSize;
+import com.rarekickz.rk_inventory_service.dto.ReserveSneakerDTO;
 import com.rarekickz.rk_inventory_service.dto.SneakerDTO;
 import com.rarekickz.rk_inventory_service.enums.Gender;
+import com.rarekickz.rk_inventory_service.exception.InvalidSizeException;
+import com.rarekickz.rk_inventory_service.exception.InvalidSneakerException;
 import com.rarekickz.rk_inventory_service.repository.SneakerRepository;
 import com.rarekickz.rk_inventory_service.service.BrandService;
 import com.rarekickz.rk_inventory_service.service.SneakerImageService;
@@ -19,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +32,8 @@ import java.util.Set;
 
 import static com.rarekickz.rk_inventory_service.specification.SneakerSpecification.createSneakerSpecification;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 @Service
@@ -55,6 +61,34 @@ public class SneakerServiceImpl implements SneakerService {
     @Transactional
     public List<Sneaker> findAllByIdWithImages(final List<Long> sneakerIds) {
         return sneakerRepository.findAllByIdWithImages(sneakerIds);
+    }
+
+    @Override
+    public void reserve(final Collection<ReserveSneakerDTO> reservedSneakers) {
+        final Map<Long, List<Double>> sneakerIdToSizes = reservedSneakers.stream()
+                .collect(groupingBy(ReserveSneakerDTO::getSneakerId, mapping(ReserveSneakerDTO::getSize, toList())));
+        final List<Long> sneakerIds = reservedSneakers.stream()
+                .map(ReserveSneakerDTO::getSneakerId)
+                .toList();
+        final List<Sneaker> sneakers = sneakerRepository.findAllWithSizes(sneakerIds);
+        sneakerIds.forEach(sneakerId -> {
+            if (sneakers.stream().noneMatch(sneaker -> sneaker.getId().equals(sneakerId))) {
+                throw new InvalidSneakerException(String.format("Sneaker with id %d does not exist", sneakerId));
+            }
+        });
+
+        sneakers.forEach(sneaker -> {
+            final Set<SneakerSize> sneakerSizes = sneaker.getSneakerSizes();
+            final List<Double> sizes = sneakerIdToSizes.get(sneaker.getId());
+            sneakerSizes.forEach(sneakerSize -> {
+                if (!sizes.contains(sneakerSize.getSneakerSizeId().getSize()) || sneakerSize.getQuantity().equals(0L)) {
+                    throw new InvalidSizeException("The selected size is not available");
+                }
+
+                sneakerSize.setQuantity(sneakerSize.getQuantity() - 1);
+            });
+        });
+        sneakerRepository.saveAll(sneakers);
     }
 
     @Override

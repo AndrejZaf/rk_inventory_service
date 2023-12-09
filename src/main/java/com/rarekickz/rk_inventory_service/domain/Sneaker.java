@@ -1,6 +1,7 @@
 package com.rarekickz.rk_inventory_service.domain;
 
 import com.rarekickz.rk_inventory_service.enums.Gender;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -56,6 +57,6 @@ public class Sneaker {
     @OneToMany(mappedBy = "sneaker", fetch = FetchType.LAZY)
     private Set<SneakerImage> sneakerImages;
 
-    @OneToMany(mappedBy = "sneaker", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sneaker", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<SneakerSize> sneakerSizes;
 }
