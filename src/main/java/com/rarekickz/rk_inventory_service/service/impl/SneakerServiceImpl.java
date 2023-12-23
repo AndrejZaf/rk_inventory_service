@@ -22,19 +22,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.rarekickz.rk_inventory_service.specification.SneakerSpecification.createSneakerSpecification;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -79,16 +70,26 @@ public class SneakerServiceImpl implements SneakerService {
 
         sneakers.forEach(sneaker -> {
             final Set<SneakerSize> sneakerSizes = sneaker.getSneakerSizes();
-            final List<Double> sizes = sneakerIdToSizes.get(sneaker.getId());
-            sneakerSizes.forEach(sneakerSize -> {
-                if (!sizes.contains(sneakerSize.getSneakerSizeId().getSize()) || sneakerSize.getQuantity().equals(0L)) {
-                    throw new InvalidSizeException("The selected size is not available");
-                }
+            final Double size = sneakerIdToSizes.get(sneaker.getId()).get(0);
+            SneakerSize sneakerSizeFromDb = sneakerSizes.stream()
+                    .filter(sneakerSize -> sneakerSize.getSneakerSizeId().getSize().equals(size))
+                    .findFirst().orElseThrow(() -> new InvalidSizeException("The selected size is not available"));
+            if (sneakerSizeFromDb.getQuantity().equals(0L)) {
+                throw new InvalidSizeException("The selected size is not available");
+            }
 
-                sneakerSize.setQuantity(sneakerSize.getQuantity() - 1);
-            });
+            sneakerSizeFromDb.setQuantity(sneakerSizeFromDb.getQuantity() - 1);
         });
         sneakerRepository.saveAll(sneakers);
+    }
+
+    @Override
+    public Double getSneakerPrices(final Collection<Long> sneakerIds) {
+        final List<Sneaker> sneakers = sneakerRepository.findAllById(sneakerIds);
+        return sneakers.stream()
+                .map(Sneaker::getPrice)
+                .reduce(Double::sum)
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     @Override

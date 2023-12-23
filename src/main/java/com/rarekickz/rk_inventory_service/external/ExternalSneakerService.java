@@ -3,7 +3,9 @@ package com.rarekickz.rk_inventory_service.external;
 import com.google.protobuf.Empty;
 import com.google.rpc.Code;
 import com.google.rpc.Status;
+import com.rarekickz.proto.lib.OrderTotalPriceResponse;
 import com.rarekickz.proto.lib.ReserveSneakersRequest;
+import com.rarekickz.proto.lib.SneakerIdsRequest;
 import com.rarekickz.proto.lib.SneakerServiceGrpc;
 import com.rarekickz.rk_inventory_service.dto.ReserveSneakerDTO;
 import com.rarekickz.rk_inventory_service.exception.InvalidSizeException;
@@ -44,5 +46,15 @@ public class ExternalSneakerService extends SneakerServiceGrpc.SneakerServiceImp
                     .build();
             responseObserver.onError(StatusProto.toStatusRuntimeException(status));
         }
+    }
+
+    @Override
+    public void getSneakerPrice(SneakerIdsRequest request, StreamObserver<OrderTotalPriceResponse> responseObserver) {
+        Double totalPrice = sneakerService.getSneakerPrices(request.getSneakerIdList());
+        OrderTotalPriceResponse totalPriceResponse = OrderTotalPriceResponse.newBuilder()
+                .setPrice(totalPrice)
+                .build();
+        responseObserver.onNext(totalPriceResponse);
+        responseObserver.onCompleted();
     }
 }

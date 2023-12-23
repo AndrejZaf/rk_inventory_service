@@ -29,4 +29,6 @@ public interface SneakerService {
     List<Sneaker> findAllByIdWithImages(List<Long> sneakerIds);
 
     void reserve(Collection<ReserveSneakerDTO> reservedSneakers);
+
+    Double getSneakerPrices(Collection<Long> sneakerIds);
 }
